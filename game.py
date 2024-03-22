@@ -1,7 +1,7 @@
 import random
 
 # Lista de palabras posibles
-words = ["python", "programación", "computadora", "código", "desarrollo",
+words = ["python", "programación", "computadora", "armaggedon", "desarrollo", "iteracion", "desafio",
 "inteligencia"]
 
 # Elegir una palabra al azar
@@ -16,14 +16,43 @@ guessed_letters = []
 print("¡Bienvenido al juego de adivinanzas!")
 print("Estoy pensando en una palabra. ¿Puedes adivinar cuál es?")
 
-word_displayed = "_" * len(secret_word)
-# Mostrarla palabra parcialmente adivinada
+# pregunto al usuario que dificultad quiere que tenga el juego
+dificultad = input("""ELIJA LA DIFICULTAD: 
+        1-Facil
+        2-Medio
+        3-Dificil
+        """)
+
+#Evaluo si la opcion ingresada es correcta
+while dificultad not in ["1","2","3"]:
+    print('dificultad no valida, ingrese otra opcion')
+    dificultad = input("""ELIJA LA DIFICULTAD: 
+        1-Facil
+        2-Medio
+        3-Dificil
+        """)
+        
+#Procedo dependiendo la dificultad
+match dificultad:
+    case "1":
+     print('Has elegido la dicultad (Facil), Ahora si la palabra contiene vocales estas se mostraran')
+     word_displayed = "".join(letter if letter in 'aeiou' else "_" for letter in secret_word)
+    case "2":
+     print('Has elegido la dificultad(Medio), se mostrara la primera y ultima letra de la palabra')
+     word_displayed = secret_word[0] + "_" * (len(secret_word)-2) + secret_word[-1]
+    case "3": 
+     print('Has elegido la dificultad (Dificil), no se mostrara completamente nada')
+     word_displayed = "_" * len(secret_word)
+         
+#Muestro la palabra parcialmente adivinada
 print(f"Palabra: {word_displayed}")
 
-# variable que ira contando los errores del jugador para evaluar si llego al maximo perimitido(perder)
 failures = 0
-
 while failures < max_attempts:
+     
+     #contador de errores
+     print(f' ERRORES: {failures}')
+     
      # Pedir al jugador que ingrese una letra
      letter = input("Ingresa una letra: ").lower()
      
@@ -47,13 +76,13 @@ while failures < max_attempts:
          failures += 1
          
      # Mostrar la palabra parcialmente adivinada
-     letters = []
-     for letter in secret_word:
-         if letter in guessed_letters:
-             letters.append(letter)
-         else:
-             letters.append("_")
-     word_displayed = "".join(letters)
+     if dificultad == "1":
+         word_displayed = "".join([letter if letter in guessed_letters or letter in "aeiou" else "-" for letter in secret_word])
+     elif dificultad == "2":
+         word_displayed = secret_word[0] + "".join([letter if letter in guessed_letters else "_" for letter in secret_word[1:-1]]) + secret_word[-1]
+     else:
+         word_displayed = "".join([letter if letter in guessed_letters else "_" for letter in secret_word])
+     
      print(f"Palabra: {word_displayed}")
      
      # Verificar si se ha adivinado la palabra completa
